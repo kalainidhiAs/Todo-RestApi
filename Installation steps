@@ -1,0 +1,132 @@
+Guide to installing, using, and testing your **Todo Management System**, along with database setup and Postman integration:
+
+1. Installation Guide
+
+Prerequisites:
+- Java Development Kit (JDK 17 or higher)
+- Maven (build automation tool)
+- MySQL (or a preferred relational database)
+- Postman (for API testing)
+
+Steps to Install and Run:
+1. Clone the repository from GitHub (if applicable):
+   ```bash
+   git clone <repository-url>
+   cd todo
+   ```
+
+2. Configure Database:
+   - Open the `application.yml` or `application.properties` file in the `src/main/resources` directory.
+   - Update the following database configurations:
+     ```yaml
+     spring:
+       datasource:
+         url: jdbc:mysql://localhost:3306/todo_db
+         username: <your-username>
+         password: <your-password>
+       jpa:
+         hibernate:
+           ddl-auto: update
+     ```
+
+3. Install Dependencies:
+   - Navigate to the project directory and run:
+     ```bash
+     mvn clean install
+     ```
+
+4. Run the Application:
+   - Start the application using:
+     ```bash
+     mvn spring-boot:run
+     ```
+
+5. Verify the Server:
+   - By default, the application runs at `http://localhost:8080`.
+
+--------------
+
+2. Usage Guide
+
+API Endpoints:
+Base URL: `http://localhost:8080`
+
+| Method  | Endpoint                      | Description                         |
+|---------|-------------------------------|-------------------------------------|
+| `GET`   | `/todos`                     | Retrieve all tasks                 |
+| `GET`   | `/todos?completed={true|false}` | Filter tasks by completion status  |
+| `GET`   | `/todos/{id}`                | Retrieve a specific task by ID     |
+| `POST`  | `/todos`                     | Add a new task                     |
+| `PUT`   | `/todos/{id}`                | Update task title by ID            |
+| `PUT`   | `/todos/{id}/mark_completed` | Mark a task as completed           |
+| `PUT`   | `/todos/{id}/mark_incompleted`| Mark a task as incomplete          |
+| `DELETE`| `/todos/{id}`                | Delete a task                      |
+
+------------
+
+3. Database Setup
+
+Create Database in MySQL:
+1. Log in to MySQL:
+   ```bash
+   mysql -u root -p
+   ```
+2. Create a database:
+   ```sql
+   CREATE DATABASE todo_db;
+   ```
+3. Grant privileges (optional):
+   ```sql
+   GRANT ALL PRIVILEGES ON todo_db.* TO 'your-username'@'localhost' IDENTIFIED BY 'your-password';
+   FLUSH PRIVILEGES;
+   ```
+4. Confirm the schema is created:
+   - After running the application, Hibernate automatically creates the required tables (`Todo`) in the `todo_db` database.
+
+---
+
+4. Postman Testing
+
+ Setup Postman:
+1. Download and install Postman** from [Postman website](https://www.postman.com/).
+2. Open Postman and create a new request.
+
+Testing Endpoints:
+1. Retrieve All Todos (`GET /todos`):**
+   - Set method to `GET`.
+   - Enter `http://localhost:8080/todos`.
+   - Click Send.
+
+2. Add a New Task (`POST /todos`):
+   - Set method to `POST`.
+   - Enter `http://localhost:8080/todos`.
+   - Go to the Body tab, select raw, and choose `JSON` format.
+   - Enter the following JSON:
+     ```json
+     { "task": "Learn Spring Boot" }
+     ```
+   - Click Send.
+
+3. Update a Task (`PUT /todos/{id}`):
+   - Replace `{id}` with the task ID, e.g., `http://localhost:8080/todos/1`.
+   - Set method to `PUT`.
+   - In the Body tab, enter:
+     ```json
+     { "task": "Learn Spring Boot and REST API" }
+     ```
+   - Click Send.
+
+4. Mark a Task as Completed (`PUT /todos/{id}/mark_completed`):
+   - Replace `{id}` with the task ID.
+   - Set method to `PUT`.
+   - Enter `http://localhost:8080/todos/1/mark_completed`.
+   - Click Send
+
+5. Delete a Task (`DELETE /todos/{id}`):
+   - Replace `{id}` with the task ID.
+   - Set method to `DELETE`.
+   - Enter `http://localhost:8080/todos/1`.
+   - Click **Send**.
+
+------------
+
